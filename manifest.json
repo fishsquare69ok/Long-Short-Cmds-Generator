@@ -2,7 +2,7 @@
   "name": "多空命令產生器",
   "short_name": "命令產生器",
   "description": "產生多空命令的 Web App",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
