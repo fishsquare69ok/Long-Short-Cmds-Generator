@@ -6,20 +6,26 @@
     <title>多空命令產生器(2024/08/19)</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- 引入 manifest 文件 -->
-    <link rel="manifest" href="manifest.json">
+<!-- 引入 manifest 文件 -->
+<link rel="manifest" href="./manifest.json">
 
-    <!-- 註冊 service worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then((registration) => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          }).catch((error) => {
-            console.error('Service Worker registration failed:', error);
-          });
-      }
-    </script>
+<!-- 註冊 service worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js') 
+      .then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      }).catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  }
+</script>
+
+<!-- iOS App Icon -->
+<link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
 </head>
 <body onload="initForm()">
     <div class="container mt-5">
