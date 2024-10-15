@@ -48,6 +48,25 @@
                         <option value="XRP">XRP</option>
                         <option value="LTC">LTC</option>
                         <option value="DOGE">DOGE</option>
+                        <!-- 新增標的 -->
+                        <option value="TRX">TRX</option>
+                        <option value="TON">TON</option>
+                        <option value="1000SHIB">1000SHIB</option>
+                        <option value="BCH">BCH</option>
+                        <option value="LINK">LINK</option>
+                        <option value="NEAR">NEAR</option>
+                        <option value="SUI">SUI</option>
+                        <option value="APT">APT</option>
+                        <option value="UNI">UNI</option>
+                        <option value="1000PEPE">1000PEPE</option>
+                        <option value="TAO">TAO</option>
+                        <option value="FET">FET</option>
+                        <option value="RENDER">RENDER</option>
+                        <option value="WIF">WIF</option>
+                        <option value="AAVE">AAVE</option>
+                        <option value="FIL">FIL</option>
+                        <option value="OP">OP</option>
+                        <option value="INJ">INJ</option>
                     </select>
                 </div>
                 <div class="form-group col-md-6">
@@ -66,16 +85,37 @@
                         <option value="XRP">XRP</option>
                         <option value="LTC">LTC</option>
                         <option value="DOGE">DOGE</option>
+                        <!-- 新增標的 -->
+                        <option value="TRX">TRX</option>
+                        <option value="TON">TON</option>
+                        <option value="1000SHIB">1000SHIB</option>
+                        <option value="BCH">BCH</option>
+                        <option value="LINK">LINK</option>
+                        <option value="NEAR">NEAR</option>
+                        <option value="SUI">SUI</option>
+                        <option value="APT">APT</option>
+                        <option value="UNI">UNI</option>
+                        <option value="1000PEPE">1000PEPE</option>
+                        <option value="TAO">TAO</option>
+                        <option value="FET">FET</option>
+                        <option value="RENDER">RENDER</option>
+                        <option value="WIF">WIF</option>
+                        <option value="AAVE">AAVE</option>
+                        <option value="FIL">FIL</option>
+                        <option value="OP">OP</option>
+                        <option value="INJ">INJ</option>
                     </select>
                 </div>
             </div>
 
-            <!-- 新增 下單模式 選項 -->
+            <!-- 修改 下單模式 選項 -->
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="orderMode">下單模式</label>
                     <select class="form-control" id="orderMode">
-                        <option value="SL.py" selected>實單</option>
+                        <option value="SL1.py" selected>實單1</option> <!-- 將 SL.py 改為 SL1.py -->
+                        <option value="SL2.py">實單2</option> <!-- 新增實單2 對應 SL2.py -->
+                        <option value="SL3.py">實單3</option> <!-- 新增實單3 對應 SL3.py -->
                         <option value="SL_AIR.py">模擬單</option>
                     </select>
                 </div>
@@ -146,7 +186,7 @@
             document.getElementById('TP').value = TPValue;
             document.getElementById('nohup').checked = nohupValue === 'true';
             document.getElementById('Leverage').value = LeverageValue;
-            document.getElementById('orderMode').value = orderModeValue || 'SL.py';
+            document.getElementById('orderMode').value = orderModeValue || 'SL1.py';
         }
 
         function concatenateAndCopy() {
