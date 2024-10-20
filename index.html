@@ -157,6 +157,16 @@
                 </div>
             </div>
 
+            <div class="form-row">
+                <!-- 修正 nohup 和中斷重新執行的控件 -->
+                <div class="form-group col-md-6">
+                    <label for="nohup">是否使用nohup</label>
+                    <input type="checkbox" id="nohup" value="true">
+                    <label for="iscont">是否為中斷重新執行</label>
+                    <input type="checkbox" id="iscont" value="false">
+                </div>
+            </div>
+
             <button type="button" class="btn btn-primary" onclick="concatenateAndCopy()">產生命令並複製到剪貼簿</button>
         </form>
         <div class="form-group mt-3">
@@ -177,6 +187,7 @@
             const LeverageValue = localStorage.getItem('SL_Leverage');
             const orderModeValue = localStorage.getItem('SL_orderMode');
             const takeProfitRValue = localStorage.getItem('SL_takeProfitR') || '3.8';  // 預設值為 3.8
+            const isContValue = localStorage.getItem('SL_iscont') === 'true';
 
             // Set values in the form
             document.getElementById('long').value = longValue || 'BTC';
@@ -185,6 +196,7 @@
             document.getElementById('SL').value = SLValue;
             document.getElementById('TP').value = TPValue;
             document.getElementById('nohup').checked = nohupValue === 'true';
+            document.getElementById('iscont').checked = isContValue;
             document.getElementById('Leverage').value = LeverageValue;
             document.getElementById('orderMode').value = orderModeValue || 'SL1.py';
             document.getElementById('takeProfitR').value = takeProfitRValue;
@@ -243,6 +255,7 @@
             localStorage.setItem('SL_Leverage', Leverage);
             localStorage.setItem('SL_orderMode', orderMode);
             localStorage.setItem('SL_takeProfitR', document.getElementById('takeProfitR').value);  // 保存停利 R
+            localStorage.setItem('SL_iscont', iscont);
 
             if (isSLMinus === 'SL_Minus') {
                 SL = -SL;
