@@ -48,7 +48,6 @@
                         <option value="XRP">XRP</option>
                         <option value="LTC">LTC</option>
                         <option value="DOGE">DOGE</option>
-                        <!-- 新增標的 -->
                         <option value="TRX">TRX</option>
                         <option value="TON">TON</option>
                         <option value="1000SHIB">1000SHIB</option>
@@ -85,7 +84,6 @@
                         <option value="XRP">XRP</option>
                         <option value="LTC">LTC</option>
                         <option value="DOGE">DOGE</option>
-                        <!-- 新增標的 -->
                         <option value="TRX">TRX</option>
                         <option value="TON">TON</option>
                         <option value="1000SHIB">1000SHIB</option>
@@ -108,14 +106,14 @@
                 </div>
             </div>
 
-            <!-- 修改 下單模式 選項 -->
+            <!-- 新增 下單模式 選項 -->
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="orderMode">下單模式</label>
                     <select class="form-control" id="orderMode">
-                        <option value="SL1.py" selected>實單1</option> <!-- 將 SL.py 改為 SL1.py -->
-                        <option value="SL2.py">實單2</option> <!-- 新增實單2 對應 SL2.py -->
-                        <option value="SL3.py">實單3</option> <!-- 新增實單3 對應 SL3.py -->
+                        <option value="SL1.py" selected>實單1</option>
+                        <option value="SL2.py">實單2</option>
+                        <option value="SL3.py">實單3</option>
                         <option value="SL_AIR.py">模擬單</option>
                     </select>
                 </div>
@@ -129,32 +127,33 @@
                             <option value="SL_Minus" selected>負</option>
                             <option value="SL_Plus">正</option>
                         </select>
-                        <input type="text" class="form-control" id="SL" placeholder="輸入SL的%">
+                        <input type="text" class="form-control" id="SL" placeholder="輸入SL的%" oninput="calculateTP()">
                     </div>
                 </div>
+
+                <!-- 新增 "停利 R" 輸入欄位，並預設為 3.8 -->
                 <div class="form-group col-md-6">
-                    <label for="TP">TP</label>
-                    <input type="text" class="form-control" id="TP" placeholder="輸入TP的%">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="R">R</label>
-                    <input type="text" class="form-control" id="R" placeholder="輸入1R幾U">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="Leverage">槓桿倍數</label>
-                    <label for="Leverage" id="margin">估算保證金：</label>
-                    <input type="text" class="form-control" id="Leverage" placeholder="輸入槓桿倍數">
+                    <label for="takeProfitR">停利 R</label>
+                    <input type="text" class="form-control" id="takeProfitR" placeholder="輸入停利 R" value="3.8" oninput="calculateTP()">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="nohup">是否使用nohup</label>
-                    <input type="checkbox" id="nohup" value="true">
-                    <label for="iscont">是否為中斷重新執行</label>
-                    <input type="checkbox" id="iscont" value="false">
+                    <label for="TP">TP (自動計算)</label>
+                    <input type="text" class="form-control" id="TP" placeholder="自動計算" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="R">R</label>
+                    <input type="text" class="form-control" id="R" placeholder="輸入1R幾U">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="Leverage">槓桿倍數</label>
+                    <label for="Leverage" id="margin">估算保證金：</label>
+                    <input type="text" class="form-control" id="Leverage" placeholder="輸入槓桿倍數">
                 </div>
             </div>
 
@@ -177,6 +176,7 @@
             const nohupValue = localStorage.getItem('SL_nohup');
             const LeverageValue = localStorage.getItem('SL_Leverage');
             const orderModeValue = localStorage.getItem('SL_orderMode');
+            const takeProfitRValue = localStorage.getItem('SL_takeProfitR') || '3.8';  // 預設值為 3.8
 
             // Set values in the form
             document.getElementById('long').value = longValue || 'BTC';
@@ -187,6 +187,19 @@
             document.getElementById('nohup').checked = nohupValue === 'true';
             document.getElementById('Leverage').value = LeverageValue;
             document.getElementById('orderMode').value = orderModeValue || 'SL1.py';
+            document.getElementById('takeProfitR').value = takeProfitRValue;
+        }
+
+        function calculateTP() {
+            const SL = document.getElementById('SL').value;
+            const takeProfitR = document.getElementById('takeProfitR').value;
+
+            if (SL !== '' && takeProfitR !== '' && !isNaN(SL) && !isNaN(takeProfitR)) {
+                const TP = (SL * takeProfitR).toFixed(2);
+                document.getElementById('TP').value = TP;
+            } else {
+                document.getElementById('TP').value = '';  // 清空 TP 值
+            }
         }
 
         function concatenateAndCopy() {
@@ -229,6 +242,7 @@
             localStorage.setItem('SL_nohup', nohup);
             localStorage.setItem('SL_Leverage', Leverage);
             localStorage.setItem('SL_orderMode', orderMode);
+            localStorage.setItem('SL_takeProfitR', document.getElementById('takeProfitR').value);  // 保存停利 R
 
             if (isSLMinus === 'SL_Minus') {
                 SL = -SL;
