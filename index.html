@@ -111,10 +111,10 @@
                 <div class="form-group col-md-6">
                     <label for="orderMode">下單模式</label>
                     <select class="form-control" id="orderMode">
-                        <option value="SL1.py" selected>實單1</option>
-                        <option value="SL2.py">實單2</option>
-                        <option value="SL3.py">實單3</option>
-                        <option value="SL_AIR.py">模擬單</option>
+                        <option value="LS1.py" selected>實單1</option>
+                        <option value="LS2.py">實單2</option>
+                        <option value="LS3.py">實單3</option>
+                        <option value="LS_AIR.py">模擬單</option>
                     </select>
                 </div>
             </div>
@@ -198,7 +198,7 @@
             document.getElementById('nohup').checked = nohupValue === 'true';
             document.getElementById('iscont').checked = isContValue;
             document.getElementById('Leverage').value = LeverageValue;
-            document.getElementById('orderMode').value = orderModeValue || 'SL1.py';
+            document.getElementById('orderMode').value = orderModeValue || 'LS1.py';
             document.getElementById('takeProfitR').value = takeProfitRValue;
         }
 
