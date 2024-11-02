@@ -111,10 +111,10 @@
                 <div class="form-group col-md-6">
                     <label for="orderMode">下單模式</label>
                     <select class="form-control" id="orderMode">
-                        <option value="LS1.py" selected>實單1</option>
-                        <option value="LS2.py">實單2</option>
-                        <option value="LS3.py">實單3</option>
-                        <option value="LS_AIR.py">模擬單</option>
+                        <option value="SL1.py" selected>實單1</option>
+                        <option value="SL2.py">實單2</option>
+                        <option value="SL3.py">實單3</option>
+                        <option value="SL_AIR.py">模擬單</option>
                     </select>
                 </div>
             </div>
@@ -127,29 +127,31 @@
                             <option value="SL_Minus" selected>負</option>
                             <option value="SL_Plus">正</option>
                         </select>
-                        <input type="text" class="form-control" id="SL" placeholder="輸入SL的%" oninput="calculateTP()">
+                        <input type="text" class="form-control" id="SL" placeholder="輸入SL的%">
                     </div>
                 </div>
 
-                <!-- 新增 "停利 R" 輸入欄位，並預設為 3.8 -->
+                <!-- 將 TP 改為下拉式選單 -->
                 <div class="form-group col-md-6">
-                    <label for="takeProfitR">停利 R</label>
-                    <input type="text" class="form-control" id="takeProfitR" placeholder="輸入停利 R" value="3.8" oninput="calculateTP()">
+                    <label for="TP">TP</label>
+                    <select class="form-control" id="TP">
+                        <option value="3.2">3.2 (SL 0.8)</option>
+                        <option value="3.5">3.5 (SL 0.9)</option>
+                        <option value="3.8" selected>3.8 (SL 1.0)</option>
+                        <option value="4.1">4.1 (SL 1.1)</option>
+                        <option value="4.4">4.4 (SL 1.2)</option>
+                        <option value="4.7">4.7 (SL 1.3)</option>
+                        <option value="5">5 (SL 1.4)</option>
+                        <option value="5.3">5.3 (SL 1.5)</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="TP">TP (自動計算)</label>
-                    <input type="text" class="form-control" id="TP" placeholder="自動計算" readonly>
-                </div>
                 <div class="form-group col-md-6">
                     <label for="R">R</label>
                     <input type="text" class="form-control" id="R" placeholder="輸入1R幾U">
                 </div>
-            </div>
-
-            <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="Leverage">槓桿倍數</label>
                     <label for="Leverage" id="margin">估算保證金：</label>
@@ -158,7 +160,6 @@
             </div>
 
             <div class="form-row">
-                <!-- 修正 nohup 和中斷重新執行的控件 -->
                 <div class="form-group col-md-6">
                     <label for="nohup">是否使用nohup</label>
                     <input type="checkbox" id="nohup" value="true">
@@ -182,11 +183,10 @@
             const shortValue = localStorage.getItem('SL_short');
             const RValue = localStorage.getItem('SL_R');
             const SLValue = localStorage.getItem('SL_SL');
-            const TPValue = localStorage.getItem('SL_TP');
+            const TPValue = localStorage.getItem('SL_TP') || '3.8'; // 預設為3.8
             const nohupValue = localStorage.getItem('SL_nohup');
             const LeverageValue = localStorage.getItem('SL_Leverage');
             const orderModeValue = localStorage.getItem('SL_orderMode');
-            const takeProfitRValue = localStorage.getItem('SL_takeProfitR') || '3.8';  // 預設值為 3.8
             const isContValue = localStorage.getItem('SL_iscont') === 'true';
 
             // Set values in the form
@@ -198,20 +198,7 @@
             document.getElementById('nohup').checked = nohupValue === 'true';
             document.getElementById('iscont').checked = isContValue;
             document.getElementById('Leverage').value = LeverageValue;
-            document.getElementById('orderMode').value = orderModeValue || 'LS1.py';
-            document.getElementById('takeProfitR').value = takeProfitRValue;
-        }
-
-        function calculateTP() {
-            const SL = document.getElementById('SL').value;
-            const takeProfitR = document.getElementById('takeProfitR').value;
-
-            if (SL !== '' && takeProfitR !== '' && !isNaN(SL) && !isNaN(takeProfitR)) {
-                const TP = (SL * takeProfitR).toFixed(2);
-                document.getElementById('TP').value = TP;
-            } else {
-                document.getElementById('TP').value = '';  // 清空 TP 值
-            }
+            document.getElementById('orderMode').value = orderModeValue || 'SL1.py';
         }
 
         function concatenateAndCopy() {
@@ -219,7 +206,7 @@
             const short = document.getElementById('short').value;
             const R = document.getElementById('R').value;
             var SL = document.getElementById('SL').value;
-            const TP = document.getElementById('TP').value;
+            const TP = document.getElementById('TP').value; // 僅取 TP 的前部分
             const nohup = document.getElementById('nohup').checked;
             const Leverage = document.getElementById('Leverage').value;
             const margin = document.getElementById('margin');
@@ -254,7 +241,6 @@
             localStorage.setItem('SL_nohup', nohup);
             localStorage.setItem('SL_Leverage', Leverage);
             localStorage.setItem('SL_orderMode', orderMode);
-            localStorage.setItem('SL_takeProfitR', document.getElementById('takeProfitR').value);  // 保存停利 R
             localStorage.setItem('SL_iscont', iscont);
 
             if (isSLMinus === 'SL_Minus') {
