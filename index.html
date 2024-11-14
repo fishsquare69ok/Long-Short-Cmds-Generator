@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多空命令產生器(2024/11/03)</title>
+    <title>多空命令產生器(2024/11/15)</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- 引入 manifest 文件 -->
@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <!-- 新增 下單模式 選項 -->
+            <!-- 更新下單模式選項 -->
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="orderMode">下單模式</label>
@@ -131,10 +131,10 @@
                     </div>
                 </div>
 
-                <!-- 將 TP 改為下拉式選單 -->
+                <!-- TP (預設) 選項 -->
                 <div class="form-group col-md-6">
-                    <label for="TP">TP</label>
-                    <select class="form-control" id="TP">
+                    <label><input type="checkbox" id="useDefaultTP"> TP (預設)</label>
+                    <select class="form-control" id="defaultTP">
                         <option value="3.2">3.2 (SL 0.8)</option>
                         <option value="3.5">3.5 (SL 0.9)</option>
                         <option value="3.8" selected>3.8 (SL 1.0)</option>
@@ -148,10 +148,18 @@
             </div>
 
             <div class="form-row">
+                <!-- TP (自動計算) 輸出 -->
+                <div class="form-group col-md-6">
+                    <label><input type="checkbox" id="useCalculatedTP"> TP (自動計算)</label>
+                    <input type="text" class="form-control" id="calculatedTP" placeholder="自動計算" readonly>
+                </div>
                 <div class="form-group col-md-6">
                     <label for="R">R</label>
                     <input type="text" class="form-control" id="R" placeholder="輸入1R幾U">
                 </div>
+            </div>
+
+            <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="Leverage">槓桿倍數</label>
                     <label for="Leverage" id="margin">估算保證金：</label>
@@ -194,11 +202,23 @@
             document.getElementById('short').value = shortValue || 'ETH';
             document.getElementById('R').value = RValue;
             document.getElementById('SL').value = SLValue;
-            document.getElementById('TP').value = TPValue;
+            document.getElementById('defaultTP').value = TPValue;
             document.getElementById('nohup').checked = nohupValue === 'true';
             document.getElementById('iscont').checked = isContValue;
             document.getElementById('Leverage').value = LeverageValue;
             document.getElementById('orderMode').value = orderModeValue || 'LS1.py';
+
+            calculateTP(); // 計算自動計算的 TP
+        }
+
+        function calculateTP() {
+            const SL = document.getElementById('SL').value;
+            if (SL !== '' && !isNaN(SL)) {
+                const calculatedTP = (SL * 3 + 0.8).toFixed(1);  // 修正為小數點第一位
+                document.getElementById('calculatedTP').value = calculatedTP;
+            } else {
+                document.getElementById('calculatedTP').value = '';
+            }
         }
 
         function concatenateAndCopy() {
@@ -206,13 +226,34 @@
             const short = document.getElementById('short').value;
             const R = document.getElementById('R').value;
             var SL = document.getElementById('SL').value;
-            const TP = document.getElementById('TP').value; // 僅取 TP 的前部分
             const nohup = document.getElementById('nohup').checked;
             const Leverage = document.getElementById('Leverage').value;
             const margin = document.getElementById('margin');
             const orderMode = document.getElementById('orderMode').value;
             const iscont = document.getElementById('iscont').checked;
             const isSLMinus = document.getElementById('isSLMinus').value;
+
+            // 確認選擇的 TP 模式
+            const useDefaultTP = document.getElementById('useDefaultTP').checked;
+            const useCalculatedTP = document.getElementById('useCalculatedTP').checked;
+
+            // 檢查是否選擇了多重 TP 或未選擇 TP
+            if (!useDefaultTP && !useCalculatedTP) {
+                alert('未指定TP');
+                return;
+            }
+            if (useDefaultTP && useCalculatedTP) {
+                alert('指定多重TP');
+                return;
+            }
+
+            // 根據選擇的 TP 模式確定 TP 值
+            let TP;
+            if (useDefaultTP) {
+                TP = document.getElementById('defaultTP').value;
+            } else if (useCalculatedTP) {
+                TP = document.getElementById('calculatedTP').value;
+            }
 
             if (long === short) {
                 alert('作多與作空標的不可相同');
@@ -270,6 +311,9 @@
             resultInput.select();
             document.execCommand('copy');
         }
+
+        // 計算 TP (自動計算) 當 SL 改變時
+        document.getElementById('SL').addEventListener('input', calculateTP);
     </script>
 </body>
 </html>
